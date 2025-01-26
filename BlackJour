@@ -1,0 +1,79 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27,16,2);
+#define SWNum 3
+#define SWR 4
+#define SWL 2
+#define SWU 5
+#define SWD 6
+#define RESET 7
+int num = 0;
+int dir = 0;
+int row = 0;
+void setup(){
+  lcd.init();
+  lcd.setBacklight(HIGH);
+  pinMode(SWNum,INPUT);
+  pinMode(SWR,INPUT);
+  pinMode(SWL,INPUT);
+  pinMode(SWU,INPUT);
+  pinMode(SWD,INPUT);
+  
+  lcd.setCursor(0,0);
+  lcd.print("0");
+}
+void loop(){
+  if(digitalRead(SWNum)==HIGH){
+    num = num +1;
+    if(num>9){
+      num = 0;
+    }
+    lcd.setCursor(dir,row);
+    lcd.print(num);
+    delay(100);
+  }
+  if(digitalRead(SWR)==HIGH){
+    dir = dir + 1;
+    if (dir >15){
+      dir = 15;
+    }
+    lcd.setCursor(dir,row);
+    lcd.print("_");
+    delay(100);
+  }
+  if(digitalRead(SWL)==HIGH){
+    dir = dir - 1;
+    if (dir >15){
+      dir = 15;
+    }
+    lcd.setCursor(dir,row);
+    lcd.print("_");
+    delay(100);
+}
+  if (digitalRead(SWU) == HIGH) {
+    row = row - 1;
+     if (row < 0) {
+      row = 1;
+    }
+    lcd.setCursor(dir, row);
+    lcd.print("_");
+    delay(100);
+  }
+   if (digitalRead(SWD) == HIGH) {
+    row = row + 1;
+     if (row > 1) {
+      row = 0;
+    }
+    lcd.setCursor(dir, row);
+    lcd.print("_");
+    delay(100);
+  }
+  if (digitalRead(RESET) == HIGH) {
+   num = 0;
+   dir = 0;
+   row = 0;
+   lcd.clear();
+   lcd.setCursor(0,0);
+   lcd.print("0");
+   delay(200);
+  }
+}
